@@ -1,0 +1,13 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/generated/prisma
+
+# License keys
+keys/private.pem
+keys/public.pem
+
+# License keys
+keys/private.pem
+keys/public.pem

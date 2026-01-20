@@ -1,0 +1,491 @@
+:root{
+  --bg: #0b1020;
+  --card: rgba(255,255,255,.08);
+  --card-solid: rgba(11,16,32,0.98);
+  --border: rgba(255,255,255,.14);
+  --text: rgba(255,255,255,.94);
+  --muted: rgba(255,255,255,.65);
+  --brand: #6d5efc;
+  --brand2:#4fd1c5;
+  --danger:#ff5c7a;
+  --radius: 16px;
+}
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial;
+  background:
+    radial-gradient(1200px 600px at 15% 10%, rgba(109,94,252,.35), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(79,209,197,.25), transparent 55%),
+    linear-gradient(180deg, #070a14, #0b1020);
+  color:var(--text);
+}
+
+a{ color:inherit; text-decoration:none; }
+
+.container{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+.card{
+  width: min(440px, 100%);
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 14px;
+}
+
+.logo{
+  width:42px;
+  height:42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  box-shadow: 0 12px 30px rgba(109,94,252,.35);
+}
+
+.h1{
+  font-size: 18px;
+  margin:0;
+  line-height:1.2;
+}
+.p{
+  margin:4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.form{
+  margin-top: 16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.label{
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.input{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  outline: none;
+}
+.input:focus{
+  border-color: rgba(109,94,252,.7);
+  box-shadow: 0 0 0 4px rgba(109,94,252,.15);
+}
+
+/* Larger / prominent input used for serial activation to match button sizing */
+.input.serial{
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 0;
+  background: linear-gradient(135deg, rgba(109,94,252,0.10), rgba(79,209,197,0.06));
+  color: var(--text);
+  box-shadow: 0 12px 30px rgba(109,94,252,0.06);
+}
+
+.input.serial:focus{
+  box-shadow: 0 0 0 4px rgba(109,94,252,.12);
+}
+
+.btn{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 0;
+  cursor: pointer;
+  color: white;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  box-shadow: 0 16px 40px rgba(79,209,197,.15);
+}
+.btn:active{ transform: translateY(1px); }
+
+.row{
+  display:flex;
+  gap:12px;
+}
+.col{ flex:1; }
+
+.note{
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align:center;
+}
+
+.err{
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: -6px;
+}
+
+/* Header controls */
+.btn.ghost{
+  background: transparent;
+  border: 1px solid var(--border);
+  box-shadow: none;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  box-shadow: 0 10px 28px rgba(109,94,252,.18);
+}
+
+.bell{
+  position:relative;
+  font-size:18px;
+  padding:8px;
+  border-radius:8px;
+  cursor:pointer;
+  background: rgba(255,255,255,0.02);
+}
+
+.badge{
+  position:absolute;
+  top:-6px;
+  right:-6px;
+  background: var(--danger);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.notif-box{
+  position:absolute;
+  right:0;
+  top:48px;
+  width:260px;
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  z-index:60;
+}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background: rgba(2,6,23,1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+.modal{
+  width: min(640px, 96%);
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  max-width: 92vw;
+}
+.modal-header{ font-weight:800; margin-bottom:10px }
+.modal-body{ padding: 12px 0; max-height: 60vh; overflow:auto }
+.modal-footer{ margin-top:12px; display:flex; justify-content:flex-end; gap:8px }
+
+/* customer card */
+.customer-card{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.avatar.small{ width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800 }
+.btn.outline{ background: transparent; border:1px solid var(--border); color:var(--text); box-shadow:none }
+/* ===== Print (Save as PDF) ===== */
+@media print {
+  body {
+    background: white !important;
+    color: #111 !important;
+  }
+
+  /* اخفاء أي شيء خارج منطقة الطباعة */
+  .no-print {
+    display: none !important;
+  }
+
+  .print-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: #111 !important;
+    padding: 0 !important;
+  }
+
+  .print-box {
+    border: 1px solid #ddd !important;
+    background: white !important;
+    color: #111 !important;
+  }
+}
+
+/* Debts layout styles */
+.debt-grid{
+  display:grid;
+  grid-template-columns: 340px 1fr;
+  gap: 18px;
+  width: min(920px, 100%);
+}
+.debt-left{ padding: 18px; display:flex; flex-direction:column; gap:12px }
+.debt-right{ padding: 18px; display:flex; flex-direction:column }
+.summary-card{
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 12px;
+}
+
+/* Security card styles for Settings */
+.security-card{
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 12px;
+  margin-top: 12px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.security-row{ display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center }
+.security-actions{ display:flex; gap:8px }
+.btn.small{ padding:8px 10px; border-radius:10px }
+
+/* Red back button (used for "رجوع") */
+.btn.back-red, .btn.ghost.back-red{
+  background: linear-gradient(135deg, rgba(255,92,122,0.96), rgba(255,60,100,0.88));
+  color: #fff;
+  border: 0;
+  box-shadow: 0 12px 30px rgba(255,92,122,0.12);
+}
+
+/* Slightly smaller padding for compact back button */
+.btn.back-red.small{ padding:8px 12px }
+
+/* Customers page styles */
+.customers-card{ padding:18px }
+.customers-header{ display:flex; justify-content:space-between; align-items:center; gap:12px }
+.customers-title{ display:flex; gap:12px; align-items:center }
+.customers-controls{ display:flex; gap:12px; align-items:center }
+.customers-controls .btn{ min-width: 120px }
+.search-row{ display:flex; justify-content:space-between; gap:12px; margin-top:14px }
+.search-row .input{ width: 420px; max-width: 60vw }
+.quick-stats{ display:flex; flex-direction:column; justify-content:center; align-items:flex-end }
+
+.customer-grid{ margin-top:14px; display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px }
+.customer-card{ display:flex; flex-direction:column; gap:10px; padding:12px; border-radius:12px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03) }
+.customer-main{ display:flex; gap:12px; align-items:center }
+.customer-info{ display:flex; flex-direction:column }
+.customer-name{ font-weight:800 }
+.customer-meta{ font-size:13px; color:var(--muted); margin-top:6px }
+.customer-actions{ display:flex; gap:8px; justify-content:flex-end }
+.customer-actions .btn.small{ padding:8px 10px }
+.customer-actions .btn.wa{ background: linear-gradient(135deg, rgba(37,211,102,.95), rgba(16,185,129,.85)); box-shadow:none }
+.customer-actions .btn.del{ background: linear-gradient(135deg, rgba(255,92,122,.9), rgba(255,140,160,.7)); box-shadow:none }
+
+@media (max-width: 720px){
+  .search-row{ flex-direction:column; align-items:stretch }
+  .search-row .input{ width:100% }
+  .customers-controls{ justify-content:space-between }
+  .customer-actions{ justify-content:flex-start }
+}
+.summary-top{ display:flex; justify-content:space-between; align-items:center }
+.summary-name{ font-weight:900 }
+.summary-balance{ font-size:18px; font-weight:900 }
+.summary-details{ margin-top:8px; color:var(--muted); font-size:13px; display:flex; gap:12px; flex-direction:column }
+
+/* Truncate long names and descriptions with ellipsis */
+.summary-name, .company, .tx-desc, .tx-header .hdr-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  display: block;
+}
+
+/* allow grid items to shrink so ellipsis works */
+.tx-row > *, .tx-header > * { min-width: 0 }
+
+.tx-row{ display:grid; grid-template-columns: 1fr 120px 160px; gap:12px; align-items:center; padding:12px; border-radius:10px; }
+.tx-row.debt{ background: rgba(255,92,122,0.04); border:1px solid rgba(255,92,122,0.06) }
+.tx-row.pay{ background: rgba(79,209,197,0.03); border:1px solid rgba(79,209,197,0.05) }
+.tx-main{ display:flex; flex-direction:column }
+.tx-title{ font-weight:800 }
+.tx-note{ font-size:13px; color:var(--muted); margin-top:6px }
+.tx-meta{ text-align:right }
+.tx-amount{ font-weight:900 }
+.tx-date{ font-size:12px; color:var(--muted); margin-top:6px }
+.tx-actions{ display:flex; gap:8px; justify-self:end }
+.tx-actions .btn.small{ padding:8px 10px }
+
+.empty{ color:var(--muted); padding:18px; border-radius:10px; background: rgba(255,255,255,0.02); text-align:center }
+
+@media (max-width: 880px){
+  .debt-grid{ grid-template-columns: 1fr; }
+}
+
+/* Ensure buttons in the left panel are not clipped by surrounding decorations */
+.debt-left{ overflow: visible }
+.debt-left { overflow: visible; position: relative; z-index: 9998 }
+.debt-left .btn { position: relative; z-index: 10000 }
+.debt-left .btn.small { z-index: 10001 }
+
+/* Lower stacking for right/center panels so left controls remain on top */
+.debt-right, .statement-txs, .debt-grid, .card { z-index: 1 }
+
+/* Add-row: keep inputs and Add button together and responsive */
+.debt-left .add-row{ display:flex; gap:8px; align-items:flex-start; flex-direction:column }
+.debt-left .add-row .add-inputs{ display:flex; gap:8px; align-items:center; width:100% }
+.debt-left .add-row .add-inputs .input{ flex: 1 1 auto; min-width: 72px; box-sizing: border-box }
+.debt-left .add-row .add-inputs select.input{ flex: 0 0 140px }
+.debt-left .add-row .add-button{ display:flex; align-items:center; width:100% }
+.debt-left .add-row .add-button .btn{ flex: 1 1 auto; white-space:nowrap }
+
+/* small input variant (match amount width) */
+.debt-left .add-row .input.small{ flex: 1 1 100%; width: 100%; max-width: none; box-sizing: border-box }
+
+/* When viewport is narrow or page is zoomed, allow inputs to shrink but keep button visible */
+@media (max-width: 680px){
+  .debt-left .add-row{ flex-wrap:wrap; gap:6px; display:flex; flex-direction:column }
+  .debt-left .add-row .add-inputs{ width:100%; display:flex; gap:6px }
+  .debt-left .add-row .add-inputs .input{ flex: 1 1 auto; max-width: 100% }
+  .debt-left .add-row .add-button .btn{ width: 100% }
+}
+
+/* Typeahead suggestions for Debts customer search */
+.typeahead{
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 6px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.45);
+  overflow: hidden;
+}
+.typeahead-item{
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+.typeahead-item:hover{ background: rgba(255,255,255,0.02); }
+
+/* Trial warning banner (shown 1-3 days before expiry) */
+.trial-banner{
+  width:100%;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, rgba(255,159,67,.95), rgba(255,92,122,.9));
+  color: white;
+  font-weight: 800;
+  text-align: center;
+  border-radius: 8px;
+  margin: 12px auto;
+  max-width: min(920px, 100%);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+/* Large-screen safety: make sure ancestor containers don't clip decorative buttons */
+@media (min-width: 881px) {
+  .container, .debt-grid, .card { overflow: visible }
+  .debt-left .btn { margin-left: 0; transform: none }
+}
+
+/* Statement styles */
+.statement-header{ display:flex; align-items:center; gap:12px }
+.statement-summary{ width:100% }
+.statement-txs{ width:100% }
+.statement-summary .summary-card{ padding:14px }
+.statement-txs{ width:100%; direction: rtl }
+.tx-header{ display:grid; grid-template-columns: 120px 90px 1fr 140px; gap:12px; align-items:center }
+.tx-header .hdr-date, .tx-row .tx-date{ text-align:right }
+.tx-header .hdr-type, .tx-row .tx-type{ text-align:center }
+.tx-header .hdr-desc, .tx-row .tx-desc{ text-align:right }
+.tx-header .hdr-amount, .tx-row .tx-amount{ text-align:left }
+.statement-txs .tx-row{ padding:12px; display:grid; grid-template-columns: 120px 90px 1fr 140px; gap:12px; align-items:center; border-radius:10px; transition: background .15s, transform .06s }
+
+/* Stronger highlight for debt/payment rows */
+.statement-txs .tx-row.debt{ background: linear-gradient(90deg, rgba(255,92,122,0.08), rgba(255,92,122,0.03)); border-left: 6px solid rgba(255,92,122,0.95); box-shadow: inset 0 0 0 1px rgba(255,92,122,0.02); }
+.statement-txs .tx-row.pay{ background: linear-gradient(90deg, rgba(79,209,197,0.06), rgba(79,209,197,0.02)); border-left: 6px solid rgba(79,209,197,0.95); box-shadow: inset 0 0 0 1px rgba(79,209,197,0.02); }
+
+/* Prevent amounts from wrapping and ensure monospace digits */
+.tx-amount{ white-space: nowrap; min-width: 72px; font-variant-numeric: tabular-nums; }
+
+/* Responsive: stack tx rows on small screens and keep amount readable */
+@media (max-width: 680px) {
+  .statement-txs .tx-row{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    padding:10px;
+    gap:8px;
+  }
+
+  .tx-date, .tx-type, .tx-desc, .tx-amount {
+    /* full width */
+    width:100%;
+  }
+
+  .tx-date{ text-align:right; font-size:13px; color:var(--muted) }
+  .tx-type{ text-align:right }
+  .tx-desc{ text-align:right; color:var(--muted) }
+
+  .tx-amount{
+    text-align:left;
+    align-self:flex-start;
+    font-size:16px;
+    font-weight:900;
+    white-space:nowrap;
+  }
+}
+.statement-txs .tx-row:hover{ transform: translateY(-2px) }
+.statement-txs .tx-row.debt .tx-amount{ color: var(--danger); }
+.statement-txs .tx-row.pay .tx-amount{ color: var(--brand2); }
+
+/* Icons before type */
+.statement-txs .tx-row.debt .tx-type::before{ content: "💸"; margin-left: 8px; display: inline-block }
+.statement-txs .tx-row.pay .tx-type::before{ content: "💰"; margin-left: 8px; display: inline-block }
+
+@media (max-width:680px){
+  .statement-header{ flex-direction:column; align-items:flex-start }
+  .statement-header img.logo, .statement-header .logo{ margin-bottom:8px }
+}
