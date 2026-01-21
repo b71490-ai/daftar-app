@@ -10,9 +10,8 @@ node_modules/.prisma
 # Local databases
 *.db
 
-# License keys / certificates
 keys/private.pem
-keys/public.pem
+# keys/public.pem   <-- خليها معلّقة
 
 # Logs
 npm-debug.log*
