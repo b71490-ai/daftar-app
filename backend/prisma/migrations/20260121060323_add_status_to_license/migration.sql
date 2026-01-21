@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "License" ADD COLUMN     "status" TEXT NOT NULL DEFAULT 'INACTIVE';
