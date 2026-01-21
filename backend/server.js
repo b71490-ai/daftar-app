@@ -157,6 +157,9 @@ app.post("/api/license/activate", async (req, res) => {
     return res.status(500).json({ ok: false, error: "SERVER_ERROR" });
   }
 });
+app.get("/", (req, res) => {
+  res.send("Daftar API is running ✅");
+});
 
 app.get("/health", (req, res) => res.json({ ok: true }));
 
