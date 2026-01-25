@@ -1,4 +1,4 @@
-const API_BASE = "https://daftar-app.onrender.com";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export async function verifyLicense(licenseKey) {
   const r = await fetch(`${API_BASE}/api/license/verify`, {
