@@ -52,7 +52,16 @@ export function addPayment({ customerId, amount, note, date }) {
 }
 
 export function removeTx(id) {
-  write(read().filter((t) => t.id !== id));
+  const list = read();
+  const idx = list.findIndex((t) => t.id === id);
+  if (idx === -1) return;
+  list[idx] = {
+    ...list[idx],
+    canceled: true,
+    canceledAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  write(list);
 }
 
 export function updateTx(id, patch) {

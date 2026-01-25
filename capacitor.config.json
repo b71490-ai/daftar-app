@@ -1,0 +1,8 @@
+{
+    "appId": "com.bizcloud.daftar",
+    "appName": "Daftar",
+    "webDir": "dist",
+    "server": {
+      "cleartext": true
+    }
+  }

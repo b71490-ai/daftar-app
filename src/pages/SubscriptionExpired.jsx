@@ -13,7 +13,7 @@ export default function SubscriptionExpired({ onBack, onLogout }) {
           <div className="logo" />
           <div>
             <h1 className="h1">⛔ الاشتراك منتهي</h1>
-            <p className="p">انتهت الفترة التجريبية الخاصة بك. يرجى تجديد الاشتراك للاستمرار.</p>
+            <p className="p">انتهت الفترة التجريبية، يرجى التفعيل</p>
           </div>
         </div>
 
@@ -34,14 +34,14 @@ export default function SubscriptionExpired({ onBack, onLogout }) {
               const msg = `مرحبًا، اشتراكي منتهي وأرغب بالتجديد\nاسم النشاط: ${name}`;
               if (!phone) {
                 try { navigator.clipboard?.writeText(msg); } catch { /* ignore */ }
-                return alert('لم يتم ضبط رقم التواصل لديك. تم نسخ نص الرسالة، ضع رقمك في الإعدادات أو أرسل الرسالة يدويًا.');
+                return window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'لم يتم ضبط رقم التواصل لديك. تم نسخ نص الرسالة، ضع رقمك في الإعدادات أو أرسل الرسالة يدويًا.', type: 'error' } }));
               }
               const to = String(phone).replace(/[^0-9]/g, "");
               const url = `https://wa.me/${to}?text=${encodeURIComponent(msg)}`;
               const w = window.open(url, '_blank');
               if (!w) {
                 // popup blocked — copy text and notify
-                try { navigator.clipboard?.writeText(msg); alert('تعذّر فتح واتساب تلقائيًا. تم نسخ نص الرسالة، ألصقه في محادثة واتساب مع رقمك.'); } catch { alert('تعذّر فتح واتساب — الرجاء إرسال رسالة التجديد يدويًا.'); }
+                try { navigator.clipboard?.writeText(msg); window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'تعذّر فتح واتساب تلقائيًا. تم نسخ نص الرسالة، ألصقه في محادثة واتساب مع رقمك.', type: 'error' } })); } catch { window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'تعذّر فتح واتساب — الرجاء إرسال رسالة التجديد يدويًا.', type: 'error' } })); }
               }
             }}
             style={{ background: 'linear-gradient(135deg, rgba(34,197,94,.95), rgba(16,185,129,.85))', minWidth: 220 }}

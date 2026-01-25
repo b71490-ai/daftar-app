@@ -13,6 +13,8 @@ export default function Settings({ onBack, onSaved }) {
   const [savedMsg, setSavedMsg] = useState("");
   const [serial, setSerial] = useState("");
   const [activInfo, setActivInfo] = useState(null);
+  const [resendCooldownSec, setResendCooldownSec] = useState(0);
+  const cooldownRef = useRef(null);
 
   useEffect(() => {
     const t = getTrader();
@@ -26,6 +28,45 @@ export default function Settings({ onBack, onSaved }) {
       setSerial(t.serial || "");
       setActivInfo({ deviceId: t.deviceId || null, activatedAt: t.activatedAt || null });
     }
+  }, []);
+
+  const resendConfirmation = async () => {
+    try {
+      const t = getTrader();
+      if (!t || !t.email) return window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'لا يوجد بريد مرجعي لإعادة الإرسال', type: 'error' } }));
+      // prevent client-side rapid clicks
+      if (resendCooldownSec > 0) return window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: `انتظر ${Math.ceil(resendCooldownSec/60)} دقيقة قبل المحاولة مجددًا`, type: 'error' } }));
+      const res = await fetch('/api/resend-confirmation', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ traderId: t.id }) });
+      const b = await res.json().catch(()=>({}));
+      if (!res.ok) {
+        // Rate limit handling
+        if (res.status === 429) {
+          const waitMin = Number(b?.retryAfterMinutes || 0);
+          if (waitMin > 0) {
+            const sec = waitMin * 60;
+            setResendCooldownSec(sec);
+            if (cooldownRef.current) clearInterval(cooldownRef.current);
+            cooldownRef.current = setInterval(() => {
+              setResendCooldownSec(s => {
+                if (s <= 1) { clearInterval(cooldownRef.current); cooldownRef.current = null; return 0; }
+                return s - 1;
+              });
+            }, 1000);
+          }
+        }
+        return window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: b.message || b.error || 'فشل إرسال رابط التأكيد', type: 'error' } }));
+      }
+      // success
+      window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'تم إرسال رابط تأكيد جديد إلى بريدك.', type: 'success' } }));
+      if (typeof b?.remaining === 'number' && b.remaining <= 0) {
+        // if no remaining attempts, set a conservative cooldown (e.g., 24h)
+        setResendCooldownSec(24 * 60 * 60);
+      }
+    } catch (e) { window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'فشل الإرسال', type: 'error' } })); }
+  };
+
+  useEffect(() => {
+    return () => { if (cooldownRef.current) clearInterval(cooldownRef.current); };
   }, []);
 
   // normalize Arabic-indic and Eastern Arabic digits to western 0-9
@@ -71,7 +112,7 @@ export default function Settings({ onBack, onSaved }) {
     try {
       const t = getTrader() || { id: crypto.randomUUID() };
       const deviceId = t.id || crypto.randomUUID();
-      const res = await fetch('http://localhost:4000/api/license/activate', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/license/activate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ licenseKey: serial.trim(), deviceId }),
@@ -136,7 +177,7 @@ export default function Settings({ onBack, onSaved }) {
     const p1 = prompt('أدخل رمز جديد:');
     if (!p1) return;
     const p2 = prompt('أعد إدخال الرمز للتأكيد:');
-    if (p1 !== p2) return alert('الرمز غير مطابق');
+    if (p1 !== p2) return window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'الرمز غير مطابق', type: 'error' } }));
     const next = { ...t };
     if (which === 'dashboard') next.pinDashboard = String(p1);
     if (which === 'settings') next.pinSettings = String(p1);
@@ -224,6 +265,21 @@ export default function Settings({ onBack, onSaved }) {
           <div style={{ marginTop: 8 }}>
             <div className="label">رقم الهاتف *</div>
             <input className="input" value={phone} onChange={(e) => setPhone(toWesternDigits(e.target.value).replace(/[^0-9]/g, ""))} disabled={!(activInfo && activInfo.deviceId && activInfo.deviceId === getTrader()?.id)} />
+          </div>
+
+          <div style={{ marginTop: 8 }}>
+            <div className="label">البريد الإلكتروني</div>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <div style={{ flex: 1 }} className="p">{getTrader()?.email || 'غير محدد'}</div>
+              {getTrader()?.email && !getTrader()?.emailVerified ? (
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button className="btn" onClick={resendConfirmation} style={{ whiteSpace: 'nowrap' }} disabled={resendCooldownSec > 0}>
+                    {resendCooldownSec > 0 ? `انتظر ${Math.ceil(resendCooldownSec/60)} دقيقة` : 'إعادة إرسال رابط التأكيد'}
+                  </button>
+                  {resendCooldownSec > 0 ? <div className="p" style={{ color: 'var(--muted)' }}>{`${Math.floor(resendCooldownSec/60)}:${String(resendCooldownSec%60).padStart(2,'0')}`}</div> : null}
+                </div>
+              ) : null}
+            </div>
           </div>
 
           <div style={{ marginTop: 8 }}>

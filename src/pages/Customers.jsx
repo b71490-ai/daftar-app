@@ -155,12 +155,12 @@ export default function Customers({ onBack }) {
   const openWhatsapp = (raw) => {
     const wa = toWaNumber(raw);
     if (!wa) {
-      alert("لا يوجد رقم واتساب لهذا العميل");
+      window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'لا يوجد رقم واتساب لهذا العميل', type: 'error' } }));
       return;
     }
     const url = `https://wa.me/${wa}`;
     const w = window.open(url, "_blank");
-    if (!w) alert("تعذّر فتح نافذة جديدة — انسخ الرقم وأرسله يدويًا.");
+    if (!w) window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'تعذّر فتح نافذة جديدة — انسخ الرقم وأرسله يدويًا.', type: 'error' } }));
   };
 
   return (
@@ -173,7 +173,7 @@ export default function Customers({ onBack }) {
               <div className="logo" />
               <div>
                 <h1 className="h1">العملاء</h1>
-                <p className="p">إدارة العملاء — بحث سريع، إضافة وتعديل وحذف.</p>
+                <p className="p">إدارة العملاء — بحث سريع، إضافة وتعديل وإيقاف (بدلاً من الحذف النهائي).</p>
               </div>
             </div>
           </div>
@@ -298,7 +298,7 @@ export default function Customers({ onBack }) {
                 <div className="customer-actions">
                   <button className="btn outline small" type="button" onClick={() => { startEdit(c); setShowFormModal(true); }}>✏️ تعديل</button>
                   <button className="btn small wa" type="button" onClick={() => openWhatsapp(c.whatsapp || c.phone)}>💬 واتساب</button>
-                  <button className="btn small del" type="button" onClick={() => del(c.id)}>🗑️ حذف</button>
+                  <button className="btn small del" type="button" onClick={() => del(c.id)}>⛔ إيقاف</button>
                 </div>
               </div>
             ))
@@ -359,11 +359,11 @@ export default function Customers({ onBack }) {
       ) : null}
 
       {showConfirm ? (
-        <Modal title="تأكيد الحذف" onClose={() => setShowConfirm(false)}>
-          <div className="note">هل تريد حذف هذا العميل نهائياً؟</div>
+        <Modal title="تأكيد الإيقاف" onClose={() => setShowConfirm(false)}>
+          <div className="note">هل تريد إيقاف هذا العميل (سيُمنع عن الاستخدام لكنه لن يُحذف نهائياً)؟</div>
           <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
             <button className="btn" onClick={confirmDelete}>
-              حذف
+              إيقاف
             </button>
             <button className="btn ghost" onClick={() => setShowConfirm(false)}>
               إلغاء

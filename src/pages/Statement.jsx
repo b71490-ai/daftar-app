@@ -122,7 +122,7 @@ export default function Statement({ customerId, onBack }) {
                 const waNum = toWaNumber(customer?.whatsapp || customer?.phone);
                 if (!waNum) {
                   navigator.clipboard?.writeText(text);
-                  alert("لا يوجد رقم للعميل ✅ تم نسخ النص للحافظة، ألصقه في واتساب");
+                  window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'لا يوجد رقم للعميل ✅ تم نسخ النص للحافظة، ألصقه في واتساب', type: 'info' } }));
                   return;
                 }
                 const url = `https://wa.me/${waNum}?text=${encodeURIComponent(text)}`;
@@ -130,7 +130,7 @@ export default function Statement({ customerId, onBack }) {
                         if (!win) {
                           // popup blocked — navigate in same tab as fallback
                           try { window.location.href = url; }
-                          catch { navigator.clipboard?.writeText(text); alert('تم نسخ النص للحافظة ✅ ألصقه في واتساب'); }
+                          catch { navigator.clipboard?.writeText(text); window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'تم نسخ النص للحافظة ✅ ألصقه في واتساب', type: 'success' } })); }
                         }
               }}
               style={{ background: 'linear-gradient(135deg, rgba(34,197,94,.95), rgba(16,185,129,.85))' }}

@@ -61,7 +61,15 @@ export function updateCustomer(id, patch) {
 }
 
 export function removeCustomer(id) {
-  const list = read().filter((x) => x.id !== id);
+  const list = read();
+  const idx = list.findIndex((x) => x.id === id);
+  if (idx === -1) return;
+  list[idx] = {
+    ...list[idx],
+    subscriptionStatus: 'blocked',
+    blockedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
   write(list);
 }
 export function getCustomer(id) {

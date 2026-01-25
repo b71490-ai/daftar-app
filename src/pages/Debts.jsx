@@ -168,13 +168,13 @@ export default function Debts({ onBack, onOpenStatement }) {
             a.remove();
           } catch {
             // final fallback: copy receipt HTML to clipboard and notify user
-            try { navigator.clipboard?.writeText(html); alert('تم نسخ محتوى السند إلى الحافظة'); } catch { /* ignore */ }
+            try { navigator.clipboard?.writeText(html); window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'تم نسخ محتوى السند إلى الحافظة', type: 'success' } })); } catch { /* ignore */ }
           }
         }
 
         // revoke URL after a short delay
         setTimeout(() => { try { URL.revokeObjectURL(url); } catch { /* ignore */ } }, 5000);
-      } catch { try { navigator.clipboard?.writeText(html); alert('تم نسخ محتوى السند إلى الحافظة'); } catch { /* ignore */ } }
+      } catch { try { navigator.clipboard?.writeText(html); window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: 'تم نسخ محتوى السند إلى الحافظة', type: 'success' } })); } catch { /* ignore */ } }
     } catch (err) {
       console.error(err);
     }
@@ -222,7 +222,7 @@ export default function Debts({ onBack, onOpenStatement }) {
   };
 
   const onRemove = (id) => {
-    if (!confirm("هل تريد حذف هذه الحركة؟")) return;
+    if (!confirm("هل تريد إلغاء هذه الحركة؟")) return;
     removeTx(id);
     refresh();
   };

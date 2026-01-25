@@ -1,0 +1,45 @@
+[
+  {
+    "id": "e89342a5-b75e-46b4-ba4e-3957dd86c80e",
+    "name": "محمد",
+    "phone": "776651105",
+    "password": "Amar2021",
+    "email": "w71490@gmail.com",
+    "plan": "trial",
+    "emailVerified": false,
+    "emailVerificationToken": "ee2b1ad72b99f2a05a742ae759f8f8df39ac4289",
+    "emailVerificationExpiresAt": "2026-01-24T18:41:43.468Z",
+    "trialStartedAt": null,
+    "expiresAt": null,
+    "createdAt": "2026-01-23T18:22:20.897Z",
+    "lastConfirmationSentAt": "2026-01-23T18:41:43.464Z",
+    "updatedAt": "2026-01-23T18:41:43.469Z",
+    "resendAttempts": [
+      "2026-01-23T18:23:11.946Z",
+      "2026-01-23T18:29:02.255Z",
+      "2026-01-23T18:29:47.562Z",
+      "2026-01-23T18:41:43.464Z"
+    ]
+  },
+  {
+    "id": "c17cf3e1-f222-42c4-ace4-a55a73ee0dbf",
+    "name": "Amar",
+    "phone": "779992669",
+    "password": "Amar2021",
+    "email": "b71490@gmail.com",
+    "role": "ADMIN",
+    "plan": "active",
+    "status": "ACTIVE",
+    "emailVerified": true,
+    "emailVerificationToken": null,
+    "emailVerificationExpiresAt": null,
+    "trialStartedAt": null,
+    "expiresAt": null,
+    "createdAt": "2026-01-23T17:07:06.892Z",
+    "lastConfirmationSentAt": "2026-01-23T17:07:31.942Z",
+    "updatedAt": "2026-01-23T18:00:00.000Z",
+    "resendAttempts": [
+      "2026-01-23T17:07:31.942Z"
+    ]
+  }
+]

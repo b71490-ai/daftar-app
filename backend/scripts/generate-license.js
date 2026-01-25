@@ -59,12 +59,12 @@ function base64urlFromBuffer(buf) {
   // خزّنه في SQLite مباشرة (Fallback بدون استخدام Prisma client)
   try {
     const id = crypto.randomUUID();
-    const dbPath = path.join(__dirname, '..', 'dev.db');
+    const dbPath = require('../config').DB_PATH;
     const keyEsc = licenseKey.replace(/'/g, "''");
     const deviceEsc = deviceId ? `'${deviceId.replace(/'/g, "''")}'` : 'NULL';
     const expiresIso = expiresAt.toISOString();
     const sql = `INSERT INTO License(id, key, expiresAt, deviceId, status, activatedAt) VALUES('${id}','${keyEsc}','${expiresIso}',${deviceEsc},'active',NULL);`;
-    execSync(`sqlite3 ${dbPath} "${sql}"`);
+    execSync(`sqlite3 "${dbPath}" "${sql}"`);
 
     console.log("\n✅ License created:");
     console.log(licenseKey);

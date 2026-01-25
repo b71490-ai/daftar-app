@@ -2,19 +2,19 @@ import { useMemo, useState } from "react";
 import { login } from "../store/auth";
 
 export default function Login({ onLoggedIn, onGoToRegister }) {
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
 
   const canSubmit = useMemo(() => {
-    return phone.trim().length >= 6 && password.length >= 4;
-  }, [phone, password]);
-
-  const submit = (e) => {
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    return emailOk && password.length >= 4;
+  }, [email, password]);
+  const submit = async (e) => {
     e.preventDefault();
     setErr("");
 
-    const res = login(phone, password);
+    const res = await login(email.trim(), password);
     if (!res.ok) {
       setErr(res.msg);
       return;
@@ -35,13 +35,13 @@ export default function Login({ onLoggedIn, onGoToRegister }) {
 
         <form className="form" onSubmit={submit}>
           <div>
-            <div className="label">رقم الجوال</div>
+            <div className="label">البريد الإلكتروني</div>
             <input
               className="input"
-              placeholder="مثال: 777123456"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              inputMode="tel"
+              placeholder="example@domain.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              inputMode="email"
             />
           </div>
 
@@ -62,14 +62,28 @@ export default function Login({ onLoggedIn, onGoToRegister }) {
             دخول
           </button>
 
+          <div style={{ height: 8 }} />
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => { window.location.href = '/request-reset'; }}
+          >
+            نسيت كلمة المرور
+          </button>
+
           <div style={{ height: 12 }} />
 
           <button
             type="button"
             className="btn btn-secondary"
             onClick={() => {
-              if (typeof onGoToRegister === 'function') onGoToRegister();
-              else window.location.reload();
+              console.log('Login: create account clicked');
+              try {
+                if (typeof onGoToRegister === 'function') onGoToRegister();
+                else window.location.reload();
+              } catch (err) {
+                console.error('Login: onGoToRegister error', err);
+              }
             }}
           >
             إنشاء حساب جديد
