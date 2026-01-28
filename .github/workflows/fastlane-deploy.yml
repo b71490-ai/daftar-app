@@ -1,1 +1,47 @@
+name: Fastlane Deploy
 
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: "Play track (internal | closed | production)"
+        required: true
+        default: "internal"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Write Google Play service account JSON
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_JSON_KEY }}' > play-key.json
+
+      - name: Install dependencies
+        run: |
+          bundle install
+
+      - name: Deploy to Play (Fastlane)
+        env:
+          GOOGLE_PLAY_JSON_KEY_PATH: play-key.json
+          TRACK: ${{ inputs.track }}
+        run: |
+          bundle exec fastlane android deploy --env "${TRACK}"
