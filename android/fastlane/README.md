@@ -73,7 +73,7 @@ The workflow is triggered manually via GitHub Actions:
 1. Go to Actions tab in GitHub
 2. Select "Fastlane Deploy" workflow
 3. Click "Run workflow"
-4. Choose the target track (internal/closed/production)
+4. Choose the target track (internal/alpha/beta/production)
 5. Click "Run workflow" button
 
 The workflow will:

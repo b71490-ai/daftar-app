@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       track:
-        description: "Play track (internal | closed | production)"
+        description: "Play track (internal | alpha | beta | production)"
         required: true
         default: "internal"
 
@@ -41,6 +41,22 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Validate required secrets
+        run: |
+          missing_secrets=()
+          [ -z "${{ secrets.KEYSTORE_PASSWORD }}" ] && missing_secrets+=("KEYSTORE_PASSWORD")
+          [ -z "${{ secrets.KEY_ALIAS }}" ] && missing_secrets+=("KEY_ALIAS")
+          [ -z "${{ secrets.KEY_PASSWORD }}" ] && missing_secrets+=("KEY_PASSWORD")
+          [ -z "${{ secrets.KEYSTORE_BASE64 }}" ] && missing_secrets+=("KEYSTORE_BASE64")
+          [ -z "${{ secrets.GOOGLE_PLAY_JSON_KEY }}" ] && missing_secrets+=("GOOGLE_PLAY_JSON_KEY")
+          
+          if [ ${#missing_secrets[@]} -gt 0 ]; then
+            echo "Error: The following required secrets are not set:"
+            printf '%s\n' "${missing_secrets[@]}"
+            exit 1
+          fi
+          echo "All required secrets are configured ✓"
+
       - name: Build web app
         run: npm run build
 
@@ -49,18 +65,32 @@ jobs:
 
       - name: Write keystore properties
         run: |
-          echo "storeFile=${{ secrets.KEYSTORE_FILE_PATH || 'release.keystore' }}" > android/keystore.properties
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/keystore.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/keystore.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/keystore.properties
+          cat > android/keystore.properties << 'EOF'
+          storeFile=${{ secrets.KEYSTORE_FILE_PATH || 'release.keystore' }}
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
 
       - name: Decode and write keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/release.keystore
+          if [ ! -s android/release.keystore ]; then
+            echo "Error: Failed to create keystore file or file is empty"
+            exit 1
+          fi
+          echo "Keystore file created successfully ✓"
 
       - name: Write Google Play service account JSON
         run: |
-          echo '${{ secrets.GOOGLE_PLAY_JSON_KEY }}' > android/play-key.json
+          cat > android/play-key.json << 'EOF'
+          ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+          EOF
+          if [ ! -s android/play-key.json ]; then
+            echo "Error: Failed to create play-key.json or file is empty"
+            exit 1
+          fi
+          echo "Google Play service account JSON created successfully ✓"
 
       - name: Install Fastlane dependencies
         working-directory: android
