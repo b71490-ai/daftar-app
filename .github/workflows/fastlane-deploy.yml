@@ -30,21 +30,19 @@ jobs:
         with:
           ruby-version: "3.2"
           bundler-cache: true
-          working-directory: android
+          working-directory: android   # ⭐ مهم
 
       - name: Write Google Play service account JSON
         run: |
           echo '${{ secrets.GOOGLE_PLAY_JSON_KEY }}' > android/play-key.json
 
       - name: Install dependencies
-        working-directory: android
-        run: |
-          bundle install
+        working-directory: android     # ⭐ مهم
+        run: bundle install
 
       - name: Deploy to Play (Fastlane)
-        working-directory: android
+        working-directory: android     # ⭐ مهم
         env:
           GOOGLE_PLAY_JSON_KEY_PATH: play-key.json
           TRACK: ${{ inputs.track }}
-        run: |
-          bundle exec fastlane android deploy --env "${TRACK}"
+        run: bundle exec fastlane android deploy --env "${TRACK}"
