@@ -1,0 +1,8 @@
+default_platform(:android)
+
+platform :android do
+  desc "Deploy to Google Play"
+  lane :deploy do
+    UI.message("Fastlane is ready and working ✅")
+  end
+end

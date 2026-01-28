@@ -40,9 +40,10 @@ jobs:
         working-directory: android     # ⭐ مهم
         run: bundle install
 
-      - name: Deploy to Play (Fastlane)
-        working-directory: android     # ⭐ مهم
+      - name: Run Fastlane
+        working-directory: android
         env:
+          CI: true
           GOOGLE_PLAY_JSON_KEY_PATH: play-key.json
           TRACK: ${{ inputs.track }}
-        run: bundle exec fastlane android deploy --env "${TRACK}"
+        run: bundle exec fastlane android deploy
